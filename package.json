@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "debug": "DEBUG=mongo-express:* npm start",
+    "dev": "nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -21,6 +23,7 @@
     "chai": "^3.4.1",
     "karma": "^0.13.15",
     "mocha": "^2.3.4",
+    "nodemon": "^1.8.1",
     "sinon": "^1.17.2",
     "supertest": "^1.1.0"
   }
