@@ -1,9 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET contacts listing. */
+/* GET list of contacts. */
 router.get('/', function(req, res) {
-  res.send('<h1>'+req.method+' request to <pre>'+req.path+'</pre></h1>');
+  res.render('list', {});
+});
+
+/* GET Render a form for adding a contact. */
+router.get('/add', function(req, res) {
+  res.render('add', {});
 });
 
 /* POST contacts. */
@@ -18,7 +23,7 @@ router.route('/:contact_id')
     next();
   })
   .get(function (req, res) {
-    res.send('<h1>'+req.method+' request to ' + req.baseUrl + req.path + '</h1>');
+    res.render('edit', {});
   })
   .post(function (req, res) {
     res.send('<h1>'+req.method+' request to ' + req.baseUrl + req.path + '</h1>');

@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  h1 Your contacts
+  p Here is a list of your contacts
+  p
+    a#delete(class="btn btn-default", href="#") Delete
+    |  
+    a#add(class="btn btn-default", href="/contacts/add") Add new
+  table.table
+    thead
+      tr
+        th
+        th Name
+        th Nickname
+        th Email
+    tbody
+      tr
+        td
+          input(type="checkbox", id="1")
+        td
+          a(href="/contacts/1") Joe Smith
+          |  Plumber
+        td Joe
+        td
+          a(href="mailto:joe@gmail.com") joe@gmail.com
+      tr
+        td
+          input(type="checkbox", id="2")
+        td
+          a(href="/contacts/1") Carla Picci
+          |  Principal Graphic Designer
+        td Carla
+        td
+          a(href="mailto:capicci@gmail.com") capicci@gmail.com
+      tr
+        td
+          input(type="checkbox", id="3")
+        td
+          a(href="/contacts/1") Snoop Lion
+          |  Principal Motherf***er
+        td Snoop
+        td
+          a(href="mailto:snoop@gmail.com") snoop@gmail.com
+    
+          
