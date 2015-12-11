@@ -12,35 +12,21 @@ block content
       tr
         th
         th Name
+        th Job
         th Nickname
         th Email
     tbody
-      tr
-        td
-          input(type="checkbox", id="1")
-        td
-          a(href="/contacts/1") Joe Smith
-          |  Plumber
-        td Joe
-        td
-          a(href="mailto:joe@gmail.com") joe@gmail.com
-      tr
-        td
-          input(type="checkbox", id="2")
-        td
-          a(href="/contacts/1") Carla Picci
-          |  Principal Graphic Designer
-        td Carla
-        td
-          a(href="mailto:capicci@gmail.com") capicci@gmail.com
-      tr
-        td
-          input(type="checkbox", id="3")
-        td
-          a(href="/contacts/1") Snoop Lion
-          |  Principal Motherf***er
-        td Snoop
-        td
-          a(href="mailto:snoop@gmail.com") snoop@gmail.com
-    
-          
+      if !contacts.length
+        tr
+          td(colspan=4) You should add a contact.
+      else
+        each contact in contacts
+          tr
+            td
+              input(type="checkbox", id="#{contact.id}")
+            td
+              a(href="/contacts/#{contact.id}")= contact.name
+            td #{contact.job}
+            td #{contact.nickname}
+            td
+              a(href="mailto:#{contact.email}") #{contact.email}
