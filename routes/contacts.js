@@ -111,7 +111,9 @@ router.route('/:contact_id')
   .delete(function (req, res) {
     var contact_id = req.params.contact_id;
     var contact = lookupContact(contact_id);
+    // res.send('Successfully deleted contact with id:' + contact_id);
     console.log('Successfully deleted contact with id:' + contact_id);
+    res.end();
   });
 
 module.exports = router;
