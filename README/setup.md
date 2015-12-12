@@ -52,23 +52,11 @@ Let's start with [Express.js][1] and the [Express generator][2].
   ```
 
 ## Install additional packages
-Let's install as `devDependencies` all the testing stuff:
+Let's install as normal `dependencies`:
 
-* [chai][3]
-* [karma][4]
-* [mocha][5]
-* [sinon][6]
-* [supertest][7]
-
-```bash
-$ npm i -D chai karma mocha sinon supertest
-```
-
-And as normal `dependencies`:
-
-* [express-session][8]
-* [mongoose][9]
-* [passport][10]
+* [express-session][3]
+* [mongoose][4]
+* [passport][5]
 
 ```bash
 $ npm i -S express-session mongoose passport
@@ -93,11 +81,6 @@ $ git commit -m 'Add a bunch of modules'
 [0]: https://nodejs.org/en/
 [1]: http://expressjs.com/en/index.html
 [2]: https://github.com/expressjs/generator
-[3]: https://github.com/chaijs/chai
-[4]: https://github.com/karma-runner/karma
-[5]: https://github.com/mochajs/mocha
-[6]: https://github.com/sinonjs/sinon
-[7]: https://github.com/visionmedia/supertest
-[8]: https://github.com/expressjs/session
-[9]: https://github.com/Automattic/mongoose
-[10]: https://github.com/jaredhanson/passport
+[3]: https://github.com/expressjs/session
+[4]: https://github.com/Automattic/mongoose
+[5]: https://github.com/jaredhanson/passport

@@ -1,8 +1,8 @@
 # Install Bootstrap Sass
 To make use of the Sass version of Bootstrap we're going to need a couple of things:
 
-* The Bootstrap framework itself (Sass version).
-* The `node-sass-middleware` package.
+* The [Bootstrap][1] framework itself (Sass version).
+* The [node-sass-middleware][2] package.
 
 ### Bootstrap
 Here we're going to integrate Bootstrap into the app. For that we're going to copy the sass, scripts and font files into our express app. At the end of the process this is what our `public/` directory should look like:
@@ -64,7 +64,7 @@ app.use(sassMiddleware({
 That should be enough. Next we'll take care of the templates and see how the Bootstrap styles are working.
 
 ### Modifying the layout
-In our `layout.jade` file, we've added a `link` tag for our stylesheet, and a couple of `script` tags for the `bootstrap.js` file, and another one for jQuery. Check its source code [here][4].
+In our `layout.jade` file, we've added a `link` tag for our stylesheet, and a couple of `script` tags for the `bootstrap.js` file, and another one for jQuery. Check its source code [here][3].
 
 This is what we have in our `index.jade`:
 
@@ -77,7 +77,7 @@ block content
     p Welcome to #{title}
       span(class="glyphicon glyphicon-thumbs-up" aria-hidden="true")
 ```
-A `div` element with the `.jumbotron` class and a glyphicon should be enough to check that everything is working properly.
+A `div` element with the `.jumbotron` class and a a `span` with a `.glyphicon` should be enough to check that everything is working properly.
 
 Check out the `v0.2` tag of the project to see how's it going so far:
 
@@ -95,7 +95,6 @@ $ npm run dev
 [next]: static-templates.md
 
 <!-- links -->
-[1]: http://expressjs.com/en/index.html
-[2]: https://github.com/lifeBalance/mongo-express/blob/v0.1/routes/contacts.js
-[3]: https://github.com/remy/nodemon
-[4]: https://github.com/lifeBalance/mongo-express/blob/v0.2/views/layout.jade
+[1]: http://getbootstrap.com/
+[2]: https://github.com/sass/node-sass-middleware
+[3]: https://github.com/lifeBalance/mongo-express/blob/v0.2/views/layout.jade

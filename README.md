@@ -6,6 +6,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 * [Bootstrap][l3]
 * [Static templates][l4]
 * [Dynamic templates][l5]
+* [Testing][l6]
 
 
 ---
@@ -22,6 +23,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 [l3]: README/bootstrap.md
 [l4]: README/static-templates.md
 [l5]: README/dynamic-templates.md
+[l6]: README/testing.md
 
 <!-- links -->
 [1]: http://expressjs.com/en/index.html
