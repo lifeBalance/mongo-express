@@ -7,6 +7,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 * [Static templates][l4]
 * [Dynamic templates][l5]
 * [Testing][l6]
+* [Client-side testing][l7]
 
 
 ---
@@ -24,6 +25,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 [l4]: README/static-templates.md
 [l5]: README/dynamic-templates.md
 [l6]: README/testing.md
+[l7]: README/client-side-testing.md
 
 <!-- links -->
 [1]: http://expressjs.com/en/index.html

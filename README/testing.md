@@ -26,10 +26,8 @@ Between the micro-testing and full-stack testing levels we are going to use what
 Next we are going to take care of installing all the packages needed for testing:
 
 * [mocha][2], which is our test-framework,
-* [karma][3], a test-runner for client-side code.
-* [chai][4], an assertion library.
-* [sinon][5], a mocking library.
-* [supertest][6] will be the **test client** we mentioned in the previous section, to help us test our middleware and routes.
+* [chai][3], an assertion library.
+* [supertest][4] will be the **test client** we mentioned in the previous section, to help us test our middleware and routes.
 
 ### Mocha
 [mocha][2] has to be installed globally:
@@ -69,7 +67,7 @@ describe('First test suite', function () {
 });
 ```
 
-* In the first line we are requiring the [assert module][7]. This module is part of the Node.js core, which makes it easy to access. It has minimal functionality, but it is convenient to use as first sanity-check, to see that the test-suite is properly installed. After that, is recommended to use another assertion library.
+* In the first line we are requiring the [assert module][5]. This module is part of the Node.js core, which makes it easy to access. It has minimal functionality, but it is convenient to use as first sanity-check, to see that the test-suite is properly installed. After that, is recommended to use another assertion library.
 
 * The `describe` function is used to group tests into **suites**. Typically, suites are in their own file and named the same the module it will be testing, this way we'll only have one `describe` function per file. We can nest `describe` functions to help with test organization, and get a nice output in the terminal.
 * The `it` function is used for create a proper **test**. This function takes 2 arguments:
@@ -96,7 +94,7 @@ describe('First test suite', function () {
 });
 ```
 
-Notice how we are importing the [assert][8] module that comes with the [Chai][4] library. This module works similarly to the one packaged with Node.js, although it provides several additional tests and is browser compatible. (Check the [Chai assert API][8] for a complete feature list)
+Notice how we are importing the [assert][5] module that comes with the [Chai][3] library. This module works similarly to the one packaged with Node.js, although it provides several additional tests and is browser compatible. (Check the [Chai assert API][6] for a complete feature list)
 
 ### Testing our routes
 Let's write another suite for our `contacts.js` route. It goes in a file named `test/contacts.js` this is what it looks like:
@@ -113,7 +111,7 @@ describe('Routes test suite', function () {
 });
 ```
 
-Here we require [supertest][6] since we are gonna use it for testing HTTP requests. It supports `expect()` assertions out of the box, so we don't even need to require any other module for that.
+Here we require [supertest][4] since we are gonna use it for testing HTTP requests. It supports `expect()` assertions out of the box, so we don't even need to require any other module for that.
 
 > It's a convention to require `supertest` with the name `request`. Note we also have to include our `app` file.
 
@@ -133,14 +131,12 @@ $ mocha
 <!-- navigation -->
 [home]: ../README.md
 [back]: dynamic-templates.md
-[next]: #
+[next]: client-side-testing.md
 
 <!-- links -->
 [1]: http://www.seleniumhq.org/
 [2]: https://github.com/mochajs/mocha
-[3]: https://github.com/karma-runner/karma
-[4]: https://github.com/chaijs/chai
-[5]: https://github.com/sinonjs/sinon
-[6]: https://github.com/visionmedia/supertest
-[7]: https://nodejs.org/api/assert.html
-[8]: http://chaijs.com/api/assert/
+[3]: https://github.com/chaijs/chai
+[4]: https://github.com/visionmedia/supertest
+[5]: https://nodejs.org/api/assert.html
+[6]: http://chaijs.com/api/assert/
