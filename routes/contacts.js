@@ -1,67 +1,32 @@
 var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
+var moment = require('moment');
+var Contact = require('../models/contacts');
 
-// Data
-var contacts = [
-  {
-    id: 1,
-    name: 'Bob',
-    job: 'Programmer',
-    nickname: 'Bobby Wan Kenobi',
-    email: 'robert@example.com'
-  },
-  {
-    id: 2,
-    name: 'Cindy',
-    job: 'Designer',
-    nickname: 'Ice princess',
-    email: 'cindy@example.com'
-  },
-  {
-    id: 3,
-    name: 'Snoop Lion',
-    job: 'Rapper',
-    nickname: 'Snoop Doggy Dog',
-    email: 'high@example.com'
-  }
-];
-
-// Functions dealing with the data above
-function lookupContact(contact_id) {
-  return _.find(contacts, function (contact) {
-    // Returns `true` when a user id matches the one received as a string.
-    return contact.id == parseInt(contact_id);
-  });
-}
-function findMaxId() {
-  return _.max(contacts, function (contact) {
-    return contact.id;
-  });
-}
-
-/* GET list of contacts. */
+/* GET to `/contacts` (Show list of contacts) */
 router.get('/', function(req, res) {
-  res.render('list', {contacts: contacts});
+  Contact.find(function (err, contacts, count) {
+    res.render('list', {contacts: contacts});
+  });
 });
 
-/* POST contacts. */
+/* POST `/contacts` (Adds a contact) */
 router.post('/', function(req, res) {
-  // Id for a new contact
-  var newContactId = findMaxId() + 1;
-  // Getting the data from the form
-  var newContact = {
-    id: newContactId,
+  new Contact({
     name: req.body.fullname,
     job: req.body.job,
     nickname: req.body.nickname,
     email:  req.body.email
-  };
-  // Pushing the new contact into the contacts array.
-  contacts.push(newContact);
-  // Sending a "flash" message.
-  res.send('New contact created with id: ' + newContact.id);
-  // res.redirect('contacts');
+  }).save(function (err, contacts, count) {
+    if (err) {
+      res.status().send('Error saving new contact: ' + err);
+    } else {
+      // TODO: Send a "flash" message and redirect.
+      res.send('New contact created');
+      // res.redirect('/contacts');
+    }
+  });
 });
 
 /* GET Render a form for adding a contact. */
@@ -69,51 +34,74 @@ router.get('/add', function(req, res) {
   res.render('add', {contact: {}});
 });
 
+
 /* GET, POST, whatever.. to /contacts/contact_id */
 router.route('/:contact_id')
-  .all(function(req, res, next) {
-    var contact_id = req.params.contact_id;
-    next();
-  })
+  // .all(function(req, res, next) {
+  //   var contact_id = req.params.contact_id;
+  //   var contact = {};
+  //   Contact.findById(contact_id, function (err, c) {
+  //     contact = c;
+  //     next();
+  //   });
+  // })
   .get(function (req, res) {
     var contact_id = req.params.contact_id;
-    var contact = lookupContact(contact_id);
 
-    res.render('edit', {contact: contact});
+    Contact.findById(contact_id, function (err, c) {
+      res.render('edit', {contact: c, moment: moment});
+    });
+
   })
   .post(function (req, res) {
     var contact_id = req.params.contact_id;
-    var contact = lookupContact(contact_id);
-    // If the contact doesn't have any notes, create empty array to put them.
-    if (!contact.notes) {
-      contact.notes = [];
-    }
-    // And add the notes received in the request
-    contact.notes.push({
-      created: Date(),
-      note: req.body.notes
+
+    Contact.findByIdAndUpdate(contact_id, {
+      $push: {notes: {note: req.body.notes}}
+    }, function (err, contact) {
+      if (err) {
+        res.status(400).send('Error saving new note: ' + err);
+      } else {
+        // TODO: Send a "flash" message and redirect.
+        res.send(contact.note + '\'s note successfully created!');
+        // res.redirect('/contacts');
+      }
     });
-    // "Flash" message
-    res.send('Note successfully created for contact: ' + contact.name);
   })
   .put(function (req, res) {
     var contact_id = req.params.contact_id;
-    var contact = lookupContact(contact_id);
 
-    contact.name = req.body.fullname;
-    contact.job = req.body.job;
-    contact.nickname = req.body.nickname;
-    contact.email = req.body.email;
-
-    // "Flash" message
-    res.send('Contact: '+ contact.name +' successfully updated!');
+    Contact.findByIdAndUpdate(contact_id, {
+      name: req.body.fullname,
+      job: req.body.job,
+      nickname: req.body.nickname,
+      email: req.body.email
+    }, function (err, contact) {
+      if (err) {
+        res.status(400).send('Error saving new contact: ' + err);
+      } else {
+        // TODO: Send a "flash" message and redirect.
+        res.send('Contact: '+ contact.name +' successfully updated!');
+        // res.redirect('/contacts');
+      }
+    });
   })
   .delete(function (req, res) {
     var contact_id = req.params.contact_id;
-    var contact = lookupContact(contact_id);
-    // res.send('Successfully deleted contact with id:' + contact_id);
-    console.log('Successfully deleted contact with id:' + contact_id);
-    res.end();
+
+    Contact.findById(contact_id, function (err, contact) {
+      if (err) {
+        res.status(500).send('Error deleting '+ contact.name + ':' + err);
+      } else {
+        contact.notes.remove();
+        contact.remove();
+        
+        // TODO: Send a "flash" message and redirect.
+        res.send('Contact: '+ contact.name +' successfully deleted!');
+        console.log('Contact: '+ contact.name +' successfully deleted!');
+        // res.redirect('/contacts');
+      }
+    });
   });
 
 module.exports = router;

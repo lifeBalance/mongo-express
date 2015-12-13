@@ -6,10 +6,43 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
 var methodOverride = require('method-override');
+var mongoose = require('mongoose');
 
 // Routes
 var routes = require('./routes/index');
 var contacts = require('./routes/contacts');
+
+// Database
+var mongoUri = process.env.MONGOURI || 'mongodb://localhost/expressdb';
+// Creating connection
+mongoose.connect(mongoUri);
+
+var conn = mongoose.connection;
+
+conn.on('connecting', function () {
+  console.log('Mongoose connecting to ' + mongoUri);
+});
+
+conn.on('connected', function () {
+  console.log('Successfully connected to ' + mongoUri);
+});
+
+conn.on('error',function (err) {
+  console.log('Mongoose connection error: ' + err);
+});
+
+conn.on('disconnected', function () {
+  console.log('Mongoose disconnected!');
+});
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', function() {
+  conn.close(function () {
+    console.log('Mongoose connection finished. App termination');
+    process.exit(0);
+  });
+});
+
 
 var app = express();
 

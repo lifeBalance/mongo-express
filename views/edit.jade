@@ -8,16 +8,16 @@ block content
         include edit-form
         button.btn.btn-primary(type="submit") Edit User
     .col-md-6
-      h2 Add a Note
-      form(role="form", method="post", action="/contacts/#{contact.id}")
+      h2 Notes
+      if contact.notes
         dl
-          if contact.notes
-            each note in contact.notes
-              dt= note.created
-              dt= note.note
-
+          each note in contact.notes
+            dt Added #{moment(note.postedDate).fromNow()}
+            dd= note.note
+            br
+      form(role="form", method="post", action="/contacts/#{contact.id}")
         .form-group
-          label(for="notes")
+          label(for="notes") Add a note
           textarea#notes.form-control(name="notes")
         button.btn.btn-default(type="submit", value="addNote") Add Note
       

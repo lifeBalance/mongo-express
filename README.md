@@ -8,6 +8,8 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 * [Dynamic templates][l5]
 * [Testing][l6]
 * [Client-side testing][l7]
+* [Connecting to a database (MongoDB)][l8]
+* [Wiring MongoDB in our routes][l9]
 
 
 ---
@@ -26,6 +28,8 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 [l5]: README/dynamic-templates.md
 [l6]: README/testing.md
 [l7]: README/client-side-testing.md
+[l8]: README/database.md
+[l9]: README/mongo-routes.md
 
 <!-- links -->
 [1]: http://expressjs.com/en/index.html
