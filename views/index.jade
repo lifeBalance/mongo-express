@@ -7,3 +7,9 @@ block content
       span(class="glyphicon glyphicon-thumbs-up" aria-hidden="true")
     p
       a.btn.btn-default(href="/contacts/") View Contacts
+    //- Checking if a user is logged in
+    if (user)
+      p You are logged in as #[b=user.username] (#[a(href="/auth/logout") logout])
+    else
+      p #[a(href="/auth/login") Please login] or #[a(href="/auth/register") register]
+  

@@ -144,7 +144,7 @@ $ git checkout tags/v0.7
 <!-- navigation -->
 [home]: ../README.md
 [back]: database.md
-[next]: #
+[next]: authentication.md
 
 <!-- links -->
 [1]: http://momentjs.com/

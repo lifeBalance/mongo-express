@@ -10,6 +10,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 * [Client-side testing][l7]
 * [Connecting to a database (MongoDB)][l8]
 * [Wiring MongoDB in our routes][l9]
+* [Authentication][l10]
 
 
 ---
@@ -30,6 +31,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 [l7]: README/client-side-testing.md
 [l8]: README/database.md
 [l9]: README/mongo-routes.md
+[l10]: README/authentication.md
 
 <!-- links -->
 [1]: http://expressjs.com/en/index.html

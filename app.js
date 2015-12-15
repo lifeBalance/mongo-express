@@ -5,12 +5,23 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
+
+// HTTP verbs not supported by browsers
 var methodOverride = require('method-override');
+
+// ODM for MongoDB
 var mongoose = require('mongoose');
+
+// Sessions and authentication
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var passportLocalMongoose = require('passport-local-mongoose');
 
 // Routes
 var routes = require('./routes/index');
 var contacts = require('./routes/contacts');
+var auth = require('./routes/auth');
 
 // Database
 var mongoUri = process.env.MONGOURI || 'mongodb://localhost/expressdb';
@@ -56,8 +67,17 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
-app.use(cookieParser());
+// app.use(cookieParser());
 
+// Adding sessions middleware
+app.use(session({
+  secret: 'grumpy cat',
+  resave: true,
+  saveUninitialized: false
+
+}));
+
+// Sass styles
 app.use(sassMiddleware({
     /* Options */
     src: path.join(__dirname, 'sass'),
@@ -67,10 +87,23 @@ app.use(sassMiddleware({
     prefix:  '/stylesheets'  // <link rel="stylesheets" href="stylesheets/app.css"/>
 }));
 
+// For serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+var Account = require('./models/accounts');
+passport.use(Account.createStrategy());
+
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
+// Routes middleware
 app.use('/', routes);
 app.use('/contacts/', contacts);
+app.use('/auth/', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

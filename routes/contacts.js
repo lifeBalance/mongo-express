@@ -4,6 +4,14 @@ var _ = require('underscore');
 var moment = require('moment');
 var Contact = require('../models/contacts');
 
+/* Restricting access to non logged in users */
+router.use(function (req, res, next) {
+  if (!req.user) {
+    res.redirect('/');
+  }
+  next();
+});
+
 /* GET to `/contacts` (Show list of contacts) */
 router.get('/', function(req, res) {
   Contact.find(function (err, contacts, count) {
@@ -23,8 +31,8 @@ router.post('/', function(req, res) {
       res.status().send('Error saving new contact: ' + err);
     } else {
       // TODO: Send a "flash" message and redirect.
-      res.send('New contact created');
-      // res.redirect('/contacts');
+      res.send('info', 'New contact created');
+      res.redirect('/contacts');
     }
   });
 });
@@ -95,7 +103,7 @@ router.route('/:contact_id')
       } else {
         contact.notes.remove();
         contact.remove();
-        
+
         // TODO: Send a "flash" message and redirect.
         res.send('Contact: '+ contact.name +' successfully deleted!');
         console.log('Contact: '+ contact.name +' successfully deleted!');
