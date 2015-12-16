@@ -1,0 +1,15 @@
+nav.navbar.navbar-default
+  .container-fluid: .container
+    .navbar-header: a.navbar-brand(href="/")
+      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+  
+    .navbar-right
+      //- Checking if a user is logged in
+      if (user)
+        a.btn.btn-warning.navbar-btn(href="/auth/logout" method="delete") Log out
+        p.navbar-text Logged in as #[b=user.username]
+      else
+        p.navbar-text You are not logged in. 
+        a.btn.btn-success.navbar-btn(href="/auth/login") Log in
+        | 
+        a.btn.btn-primary.navbar-btn(href="/auth/register") Register

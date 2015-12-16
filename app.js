@@ -18,6 +18,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var passportLocalMongoose = require('passport-local-mongoose');
 
+// Flash messages
+var flash = require('connect-flash');
+
 // Routes
 var routes = require('./routes/index');
 var contacts = require('./routes/contacts');
@@ -67,7 +70,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
-// app.use(cookieParser());
+// app.use(cookieParser('grumpy cat'));
 
 // Adding sessions middleware
 app.use(session({
@@ -76,6 +79,9 @@ app.use(session({
   saveUninitialized: false
 
 }));
+
+// Flash messages
+app.use(flash());
 
 // Sass styles
 app.use(sassMiddleware({

@@ -11,6 +11,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 * [Connecting to a database (MongoDB)][l8]
 * [Wiring MongoDB in our routes][l9]
 * [Authentication][l10]
+* [Using authentication][l11]
 
 
 ---
@@ -32,6 +33,7 @@ Small project for practicing with [Express.js][1] using a bunch of other technol
 [l8]: README/database.md
 [l9]: README/mongo-routes.md
 [l10]: README/authentication.md
+[l11]: README/using_authentication.md
 
 <!-- links -->
 [1]: http://expressjs.com/en/index.html

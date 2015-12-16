@@ -15,7 +15,12 @@ router.use(function (req, res, next) {
 /* GET to `/contacts` (Show list of contacts) */
 router.get('/', function(req, res) {
   Contact.find(function (err, contacts, count) {
-    res.render('list', {contacts: contacts});
+
+    res.render('list', {
+      contacts: contacts,
+      user: req.user,
+      message: req.flash('success') || req.flash('error')
+    });
   });
 });
 
@@ -30,8 +35,8 @@ router.post('/', function(req, res) {
     if (err) {
       res.status().send('Error saving new contact: ' + err);
     } else {
-      // TODO: Send a "flash" message and redirect.
-      res.send('info', 'New contact created');
+      // Send a "flash" message and redirect.
+      req.flash('success', 'New contact created');
       res.redirect('/contacts');
     }
   });
@@ -39,7 +44,10 @@ router.post('/', function(req, res) {
 
 /* GET Render a form for adding a contact. */
 router.get('/add', function(req, res) {
-  res.render('add', {contact: {}});
+  res.render('add', {
+    contact: {},
+    user: req.user
+  });
 });
 
 
@@ -57,7 +65,11 @@ router.route('/:contact_id')
     var contact_id = req.params.contact_id;
 
     Contact.findById(contact_id, function (err, c) {
-      res.render('edit', {contact: c, moment: moment});
+      res.render('edit', {
+        user: req.user,
+        contact: c,
+        moment: moment
+      });
     });
 
   })
@@ -65,14 +77,18 @@ router.route('/:contact_id')
     var contact_id = req.params.contact_id;
 
     Contact.findByIdAndUpdate(contact_id, {
-      $push: {notes: {note: req.body.notes}}
+      $push: {
+        notes: {
+          note: req.body.notes
+        }
+      }
     }, function (err, contact) {
       if (err) {
         res.status(400).send('Error saving new note: ' + err);
       } else {
-        // TODO: Send a "flash" message and redirect.
-        res.send(contact.note + '\'s note successfully created!');
-        // res.redirect('/contacts');
+        // Send a "flash" message and redirect.
+        req.flash('success', contact.note + '\'s note successfully created!');
+        res.redirect('/contacts');
       }
     });
   })
@@ -88,9 +104,9 @@ router.route('/:contact_id')
       if (err) {
         res.status(400).send('Error saving new contact: ' + err);
       } else {
-        // TODO: Send a "flash" message and redirect.
-        res.send('Contact: '+ contact.name +' successfully updated!');
-        // res.redirect('/contacts');
+        // Send a "flash" message and redirect.
+        req.flash('success', 'Contact: '+ contact.name +' successfully updated!');
+        res.redirect('/contacts');
       }
     });
   })
@@ -104,9 +120,8 @@ router.route('/:contact_id')
         contact.notes.remove();
         contact.remove();
 
-        // TODO: Send a "flash" message and redirect.
-        res.send('Contact: '+ contact.name +' successfully deleted!');
-        console.log('Contact: '+ contact.name +' successfully deleted!');
+        // Send a "flash" message and redirect.
+        // req.flash('success', 'Contact: '+ contact.name +' successfully deleted!');
         // res.redirect('/contacts');
       }
     });

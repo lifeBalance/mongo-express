@@ -17,9 +17,15 @@ html(lang="en")
     <![endif]-->
     
   body
+    include ./navigation
     .container
-      if message
-        p= message
+      //- Showing alerts
+      if message && message.length > 0
+        div(class="alert alert-info alert-dismissible fade-in" role="alert")
+          button.close(type="button" data-dismiss="alert" aria-label="Close")
+            span(aria-hidden="true") &times;
+          p= message
+        
       block content
 
     // jQuery (necessary for Bootstrap's JavaScript plugins)

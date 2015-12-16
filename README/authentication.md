@@ -1,8 +1,9 @@
 # Authentication
 Authentication allows us to restrict access to our web-app to people that have logged in (aka signed in). In order to log in, we may require users to register in our database using a username and a password, or use a system that allows them to use the same credentials they use on other social apps such as Facebook, Twitter or even Github.
 
-Even though we could roll up our own authentication system, is preferable to use a reliable third party module. In this case we have chosen a well known module named [Passport][1], for several reasons:
+Authentication is a big and important part in a serious web application. Although a bit difficult and a big responsibility, we could roll up our own authentication system, but most of the times is preferable to rely on a third party module. In this case we have chosen a well known module named [Passport][1], for several reasons:
 
+* There's a wide community of users and developers behind it and constantly releasing updates that fix security issues or introduce new cool features.
 * It supports more than 300 **authentication strategies**, including:
 
   * Local authentication using User name and password, which is the most widely used way for websites to authenticate users.
@@ -11,7 +12,7 @@ Even though we could roll up our own authentication system, is preferable to use
 
 * It is a well documented and open source project working since 2011.
 
-## Installing requirements
+## Installing and configuring
 To start using Passport we need to take care of a couple more details:
 
 * Our app needs to support persistent login **sessions** (recommended, but not required), and the [express-session][4] package will take care of that. In older versions of [Express][0] session support was built-in, but in recent versions it has been moved to its own module, so that it can be updated separately.
@@ -110,127 +111,87 @@ return done(null, user, { message: 'Incorrect password.' });
 
 But again, **passport-local-mongoose** is taking care of the **verify callback** for us, so if we need to pass in some options, we'll do it in the schema, when we plug in  `passportLocalMongoose`. Check [here][7] for the whole list of options we can pass.
 
-## Routes for registering, and logging in/out
-We need to define routes for:
+## Flash messages
+Usually, when a user register, logs in, or authentication fails, she's usually redirected to another page. In those situations it's necessary to let the user know what's going on, otherwise would be confusing.
 
-* Registering.
-* Log in.
-* Log out.
+The way we send the user messages after important interactions is using flash messages. These messages are written to the **session** and cleared after being displayed to the user. The flash is typically used in combination with redirects, ensuring that the message is available to the next page that is to be rendered.
 
-These routes go in a separate file named `auth.js`, inside the `routes/` folder, so before anything let's require it in our main file:
+Passport supports these messages but it requires a `req.flash()` function. [Express][0] removed support for the flash messages in **version 3**, so in order to bring it back we need to use an external package, in this case [connect-flash][8]. To install it:
 
-```js
-app.use('/auth/', auth);
+```bash
+$ npm i -S connect-flash
 ```
 
-### Registration
-This is what the route for registering looks like:
+Then, we have to require it at the top of our main file, and connect it to the middleware after the session one:
 
 ```js
-router.route('/register')
-  .get(function (req, res, next) {
-    res.render('register', {});
-  })
-  .post(function (req, res, next) {
-    Account.register(new Account({ username: req.body.username }),
-      req.body.password,
-      function(err, account) {
-        if(err) {
-          return res.render('register', {account: account});
-        }
+var flash = require('connect-flash');
+```
 
-        req.login(account, function(err) {
-          res.redirect('/contacts');
-        });
-      }
-    )
+Remember that the flash messages are stored in the session, so don't forget to connect the flash middleware **after** the one for sessions:
+
+```js
+app.use(flash());
+```
+
+Now we are ready to use flash messages.
+
+### Using flash messages
+Since we haven't started using authentication yet, let's see how flash messages work when doing things not related to authentication. For example, when we create a contact:
+
+```js
+router.post('/', function(req, res) {
+  new Contact({
+    name: req.body.fullname,
+    job: req.body.job,
+    nickname: req.body.nickname,
+    email:  req.body.email
+  }).save(function (err, contacts, count) {
+    if (err) {
+      res.status().send('Error saving new contact: ' + err);
+    } else {
+      // Send a "flash" message and redirect.
+      req.flash('success', 'New contact created');
+      res.redirect('/contacts');
+    }
   });
-```
-
-Notice how we are logging in the user after its successful registration. This is done using the `login()` function on `req` (also aliased as `logIn()`).
-
-### Logging in
-The route for **logging in** has two parts:
-
-* One for showing the log in form:
-
-```js
-router.get('/login', function(req, res, next) {
-  res.render('login', { user: req.user });
 });
 ```
 
-* And another one for handling the `POST` request sent with the form:
+Check the last lines in the else statement, we are setting a success flash message. Now we need to pull it of when redirecting to contacts:
 
 ```js
-router.post('/login', passport.authenticate('local'), function(req, res) {
-     res.redirect('/contacts');
- });
-```
+router.get('/', function(req, res) {
+  Contact.find(function (err, contacts, count) {
 
-The `passport.authenticate()` middleware invokes `req.login()` automatically. When the login operation completes, user will be assigned to `req.user`.
-
-* And finally, the route for **logging out**:
-```js
-router.get('/logout', function(req, res, next) {
-  req.logout();
-  res.redirect('/');
+    res.render('list', {
+      contacts: contacts,
+      user: req.user,
+      message: req.flash('success') || req.flash('error')
+    });
+  });
 });
 ```
 
-Passport exposes a `logout()` function on `req` (also aliased as `logOut()`) that can be called from any route handler which needs to terminate a login session. Invoking `logout()` will remove the `req.user` property and clear the login session (if any).
+In the router that takes care of requests to `/contacts`, we pass to the `render` method an alternative flash message, either success or error.
 
-### Middleware for restricting access
-In our `routes/contact.js` file we need to create a small middleware function that restrict access to users that are not logged in. In other words, if a user is not logged in and tries to visit the `contacts` page, will be redirected to the `index` page:
-
-```js
-router.use(function (req, res, next) {
-  if (!req.user) {
-    res.redirect('/');
-  }
-  next();
-});
-```
-
-In the condition inside the if statement we are checking if the `req.user` property is **empty**. If it is, it means the user is not logged in, and we redirect to the **root route**. Note that this small piece of middleware is key for restricting access, without it, authentication would still work but it would make no difference if a user is authenticated or not.
-
-## Views
-We are gonna start adding links to our `index.jade` template:
+Finally, in the `layout.jade` we print out the flash messages:
 
 ```
-if (user)
-  p You are logged in as #[b=user.username] (#[a(href="/auth/logout") logout])
-else
-  p #[a(href="/auth/login") Please login] or #[a(href="/auth/register") register]
+if message && message.length > 0
+  div(class="alert alert-info alert-dismissible fade-in" role="alert")
+    button.close(type="button" data-dismiss="alert" aria-label="Close")
+      span(aria-hidden="true") &times;
+    p= message
 ```
 
-These links are shown only if a user is not logged in, but how the template knows what a `user` is? It doesn't, we have to pass one as a property of object we are passing as the data context, so in our `index.js` route we'll pass :
-
-```js
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express', user: req.user });
-});
-```
-
-We have added a couple of templates for:
-
-* Register.
-* Logging in.
-
-That's all for this section. Check out the `v0.7` tag of the project to see how's it going so far:
-
-```
-$ git checkout tags/v0.7
-```
-
-By the way, **passport-local-mongoose** already offers a default list of authentication error messages [here][8]
 ---
 [:arrow_backward:][back] ║ [:house:][home] ║ [:arrow_forward:][next]
 
 <!-- navigation -->
 [home]: ../README.md
 [back]: mongo-routes.md
-[next]: #
+[next]: using_authentication.md
 
 <!-- links -->
 [0]: http://expressjs.com/en/index.html
@@ -241,4 +202,4 @@ By the way, **passport-local-mongoose** already offers a default list of authent
 [5]: https://www.npmjs.com/package/passport-local
 [6]: https://www.npmjs.com/package/passport-local-mongoose
 [7]: https://github.com/saintedlama/passport-local-mongoose#options
-[8]: https://github.com/saintedlama/passport-local-mongoose#error-messages
+[8]: https://github.com/jaredhanson/connect-flash
