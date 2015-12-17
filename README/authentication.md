@@ -6,9 +6,9 @@ Authentication is a big and important part in a serious web application. Althoug
 * There's a wide community of users and developers behind it and constantly releasing updates that fix security issues or introduce new cool features.
 * It supports more than 300 **authentication strategies**, including:
 
-  * Local authentication using User name and password, which is the most widely used way for websites to authenticate users.
-  * Delegated authentication using [Oauth/Oauth 2.0][2], which allows users to log in using social media accounts such as Facebook or Twitter.
-  * Federated authentication using [OpenID][3].
+  * **Local** authentication using User name and password, which is the most widely used way for websites to authenticate users.
+  * **Delegated** authentication using [Oauth/Oauth 2.0][2], which allows users to log in using social media accounts such as Facebook or Twitter.
+  * **Federated** authentication using [OpenID][3].
 
 * It is a well documented and open source project working since 2011.
 

@@ -84,8 +84,8 @@ router.post('/login',
 
 The `passport.authenticate()` middleware invokes `req.login()` automatically after a successful authentication. It takes two arguments:
 
-* The authentication strategy.
-* An options object. The `failureFlash` is set to `true`, meaning that if there are any errors while authenticating, they will be passed as flash messages. By the way, **passport-local-mongoose** already offers a default list of authentication error messages [here][9]
+* The authentication strategy, in this case `local`.
+* An options object. The `failureFlash` is set to `true`, meaning that if there are any errors while authenticating, they will be passed as flash messages. By the way, **passport-local-mongoose** already offers a default list of authentication error messages [here][8]
 
 > When the login operation completes, user will be assigned to `req.user`.
 
@@ -148,7 +148,7 @@ $ git checkout tags/v0.8
 
 <!-- navigation -->
 [home]: ../README.md
-[back]: mongo-routes.md
+[back]: authentication.md
 [next]: #
 
 <!-- links -->
